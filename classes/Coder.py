@@ -1,13 +1,18 @@
 import sys, time, random
 
+# deque is faster O(1) than a list O(n)
+# use it like this: stack = deque(); stack.append(var); var = stack.pop();
+from collections import deque
+
 list_of_vars = ['x', 'y', 'i', 'index', 'foo', 'bar', 'foobar', 'amount', 'width', 'height']
 
 class Coder:
 
     next_action = None
-    nextnext_action = None
+    # buffered_action = None
     tab = 0
     vars_in_use = []
+    buffered_actions = deque()
 
     def humanoid_print(self, print_out):
         for _ in range(self.tab):
@@ -18,6 +23,10 @@ class Coder:
             time.sleep(random.randint(1, 10)/100)
             if index == len(print_out) - 1:
                 print()
+
+    def roll_indent(self):
+        # random roll for a chance to indent 1 level back
+        pass
 
     def if_statement(self):
         self.humanoid_print('if')
@@ -58,20 +67,23 @@ class Coder:
         # these two actions are composite, and require a second part with
         # indentation back and forth
         if self.next_action == self.if_else_statement:
-            self.nextnext_action = self.else_statement
+            self.buffered_actions.append(self.else_statement)
         if self.next_action == self.try_statement:
-            self.nextnext_action = self.except_statement
+            self.buffered_actions.append(self.except_statement)
 
     def action_cleanup(self):
         self.next_action = None
-        self.nextnext_action = None
+        # self.buffered_action = None
 
     def do_next_action(self):
         self.choose_action()
         self.next_action(self)
-        if self.nextnext_action is not None:
-            self.tab = self.tab - 1
-            self.nextnext_action()
+
+        # self.buffered_actions.pop()()             #execute else: or except:
+
+        # if self.buffered_action is not None:
+        #     self.tab = self.tab - 1
+        #     self.buffered_action()
         self.action_cleanup()
 
         self.do_next_action()
