@@ -3,15 +3,18 @@ FLOW:
 REQUIRES TO GENERATE 2 ACTIONS IN ADVANCE
 
 POSSIBLE ACTIONS:
-ASSIGN VAR
+ASSIGN VAR (ADD VAR TO LIST OF VALUES)
 CREATE LOOP
-CREATE FUNCTION
+CREATE FUNCTION (ADD FUNCTION TO LIST OF VALUES)
 IF STATEMENT
-IF ELSE STATEMENT
+IF ELSE STATEMENT (double assign)
 CALL FUNCTION
 PRINT STATEMENT
-TRY EXCEPT
+TRY EXCEPT (double assign)
 -----
+
+
+
 
 GLOBAL INDENT COUNTER = 0
 
@@ -36,3 +39,38 @@ IF STATEMENT
     CALL FUNCTION
 
     RANDOM IF INDENT BACK
+
+
+-----
+NEXT_ACTION:
+    NEXT, NEXTNEXT = CHOOSE_ACTION()
+
+
+
+---     self.next
+ ---    self.next 
+ ---    self.next 
+---     self.nextnext
+---     self.next
+ ---    self.next    
+  ---   self.next    
+  ---   self.next    
+ ---    self.nextnext    
+  ---   self.next    
+   ---  self.next
+ ---    self.nextnext
+---     self.nextnext
+
+---     0
+ ---    1
+ ---    1
+---     0
+---     0
+ ---    1
+  ---   2
+  ---   2
+ ---    1
+  ---   2
+   ---  3
+ ---    1
+---     0
