@@ -79,7 +79,7 @@ class Coder:
         return '(ITERABLE)'
     
     def generate_function_name(self):
-        return '(' + Generators.generate_function_name() + ')'
+        return Generators.generate_function_name()
 
     def if_statement(self):
         self.humanoid_print('if ' + self.generate_statement() + ':')
@@ -96,7 +96,7 @@ class Coder:
         # self.humanoid_print('if else')
 
     def if_inline_statement(self):
-        self.humanoid_print(random.choice(list_of_vars) + ' = ' + Generators.generate_value() + ' if (' + Generators.get_statement() + ') else (' + Generators.generate_value() + ')')
+        self.humanoid_print(random.choice(list_of_vars) + ' = ' + Generators.generate_value() + ' if (' + Generators.get_statement() + ') else ' + Generators.generate_value())
         self.followup = False
 
     def try_statement(self):
@@ -131,15 +131,15 @@ class Coder:
         self.followup = False
     
     def print_statement(self):
-        self.humanoid_print('print(' + self.generate_value() + ')')
+        self.humanoid_print('print(' + random.choice([Generators.get_statement(), Generators.generate_number(), Generators.generate_function_name(), Generators.generate_variable_name()]) + ')')
         self.followup = False
     
     def execute_function_statement(self):
-        self.humanoid_print(random.choice(list_of_functions) + '(' + random.choice(list_of_vars) +')')
+        self.humanoid_print(Generators.generate_function_name())
         self.followup = False
 
     def comment_statement(self):
-        comment = '# some comment'
+        comment = Generators.generate_comment()
         self.humanoid_print(comment)
 
     # def pass_statement(self):

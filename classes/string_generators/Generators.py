@@ -1,4 +1,5 @@
 import random
+import math
 
 variable_name_special = ['i', 'j', 'z', '_', 'count']
 variable_name_main = ['main', 'count', 'size', 'width', 'height', 'area', 'volume', 'amount', 'cell', 'sum']
@@ -9,7 +10,7 @@ function_name_main = ['get', 'retrieve', 'add', 'multiply', 'count', 'size', 'ch
 strings = []
 
 def generate_number():
-    return str(random.choice([random.randint(0, 10000), random.random()]))
+    return str(random.choice([random.randint(0, 10000), str(round(random.random(), 3))]))
 
 def generate_variable_name():
     roll = random.choice(['one_word', 'two_words', 'three_words', 'special'])
@@ -62,7 +63,7 @@ def generate_function_name():
         choice = random.choice(function_name_main) + '_' + random.choice(variable_name_main) + '(' + generate_arguments() + ')'
         return choice
     elif roll is 'three_words':
-        choice = random.choice(function_name_main) + '_' + random.choice(variable_name_secondary) + '_' + random.choice(variable_name_main) + '( ' + generate_arguments() + ')'
+        choice = random.choice(function_name_main) + '_' + random.choice(variable_name_secondary) + '_' + random.choice(variable_name_main) + '(' + generate_arguments() + ')'
         return choice
 
 def get_statement():
@@ -100,3 +101,17 @@ def get_statement():
 
     return 'hi source code nerd :)'
     
+
+list_of_comments_type_one = ['The following code is responsible for', 'Check out:', 'Explaining', '!IMPORTANT', 'TODO', 'BUG']
+
+list_of_comments_type_two = ['is the focus here', '- to finish', 'not generating then expected output', 'DON\'T TOUCH!']
+list_of_comments_type_three = ['Important function:', 'Do not forget to declare:', 'Determines the outcome', 'Check the wiki:', 'BTW, www.github.com/Goradux']
+def generate_comment():
+    roll = random.randint(0, 2)
+    if roll is 0:
+        return '# ' + random.choice(list_of_comments_type_one) + ' ' + generate_value()
+    elif roll is 1:
+        # if roll is 1
+        return '# ' + generate_value() + ' ' + random.choice(list_of_comments_type_two) 
+    elif roll is 2:
+        return '# ' + random.choice(list_of_comments_type_three)
