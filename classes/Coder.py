@@ -1,5 +1,12 @@
 import sys, time, random
 
+# pip install colorama
+# https://pypi.org/project/colorama/
+from colorama import Fore, Back, Style
+from colorama import init as coloramainit
+coloramainit()
+#a way to reset the colors is to call print(Style.RESET_ALL, end='')
+
 # deque is faster O(1) than a list O(n)
 # use it like this: stack = deque(); stack.append(var); var = stack.pop();
 from collections import deque
@@ -59,7 +66,7 @@ class Coder:
             print()
 
     def if_statement(self):
-        self.humanoid_print('if:')
+        self.humanoid_print('if (STATEMENT):')
         self.tab = self.tab + 1
         self.followup = True
 
@@ -73,7 +80,7 @@ class Coder:
         # self.humanoid_print('if else')
 
     def if_inline_statement(self):
-        self.humanoid_print(random.choice(list_of_vars) + ' = ' + 'statement if statement else 0')
+        self.humanoid_print(random.choice(list_of_vars) + ' = ' + '(STATEMENT) if (STATEMENT) else 0')
         self.followup = False
 
 
@@ -97,7 +104,7 @@ class Coder:
         self.followup = True
 
     def create_function(self):
-        self.humanoid_print('function:')
+        self.humanoid_print('function (FUNCTION):')
         self.tab = self.tab + 1
         self.followup = True
 
@@ -130,7 +137,7 @@ class Coder:
     action_choices_simple = [assign_var_value, print_statement, execute_function_statement,
         comment_statement]
     def choose_action(self):
-        self.next_action = random.choice(self.action_choices)
+        self.next_action = random.choice(self.action_choices) if self.tab < 5 else random.choice(self.action_choices_simple)
         # print(self.next_action)
         self.next_action(self)
         
