@@ -7,6 +7,9 @@ from colorama import init as coloramainit
 coloramainit()
 #a way to reset the colors is to call print(Style.RESET_ALL, end='')
 
+# paths have to be relative to __main__ in Python, otherwise use sys.path
+import classes.string_generators.Generators as Generators
+
 # deque is faster O(1) than a list O(n)
 # use it like this: stack = deque(); stack.append(var); var = stack.pop();
 from collections import deque
@@ -66,17 +69,17 @@ class Coder:
             print()
 
     def generate_statement(self):
-        return '(STATEMENT)'
+        return Generators.get_statement()
 
     def generate_value(self):
-        return '(VALUE)'
+        return Generators.generate_value()
 
     def generate_iterable(self):
         iterable = 'range(' + str(random.randint(0, 50)) + ', ' + str(random.randint(50, 250)) + ')'
         return '(ITERABLE)'
     
     def generate_function_name(self):
-        return '(FUNCTION NAME)'
+        return '(' + Generators.generate_function_name() + ')'
 
     def if_statement(self):
         self.humanoid_print('if ' + self.generate_statement() + ':')
@@ -93,7 +96,7 @@ class Coder:
         # self.humanoid_print('if else')
 
     def if_inline_statement(self):
-        self.humanoid_print(random.choice(list_of_vars) + ' = ' + '(VALUE) if (STATEMENT) else (VALUE)')
+        self.humanoid_print(random.choice(list_of_vars) + ' = ' + Generators.generate_value() + ' if (' + Generators.get_statement() + ') else (' + Generators.generate_value() + ')')
         self.followup = False
 
     def try_statement(self):

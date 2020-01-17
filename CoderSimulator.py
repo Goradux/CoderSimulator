@@ -1,4 +1,6 @@
-import time, datetime
+import time, datetime, sys
+
+sys.setrecursionlimit(10**6)
 
 from classes.Coder import Coder
 
