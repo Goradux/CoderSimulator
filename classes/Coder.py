@@ -22,14 +22,22 @@ class Coder:
     next_action = None
     # buffered_action = None
     tab = 0
+    tabs = deque()
     vars_in_use = []
     buffered_actions = deque()
     followup = False
 
-    def humanoid_print(self, print_out):
+    def humanoid_print(self, print_out, matching_indent=None):
+        if matching_indent is None:
+            matching_indent = False
         # print(self.tab)
-        for _ in range(self.tab):
-                print('    ', end = '')
+        if matching_indent is False:
+            for _ in range(self.tab):
+                    print('    ', end = '')
+        else:
+            offset = self.tabs.pop()
+            for _ in range(offset):
+                    print('    ', end = '')
         for index in range(len(print_out)):
             print(print_out[index], end = '')
             sys.stdout.flush()
@@ -74,9 +82,9 @@ class Coder:
     def generate_value(self):
         return Generators.generate_value()
 
-    def generate_iterable(self):
-        iterable = 'range(' + str(random.randint(0, 50)) + ', ' + str(random.randint(50, 250)) + ')'
-        return '(ITERABLE)'
+    # def generate_iterable(self):
+    #     iterable = 'range(' + str(random.randint(0, 50)) + ', ' + str(random.randint(50, 250)) + ')'
+    #     return '(ITERABLE)'
     
     def generate_function_name(self):
         return Generators.generate_function_name()
@@ -87,11 +95,12 @@ class Coder:
         self.followup = True
 
     def else_statement(self):
-        self.humanoid_print('else:')
+        self.humanoid_print('else:', matching_indent=True)
         self.tab = self.tab + 1
         self.followup = True
 
     def if_else_statement(self):
+        self.tabs.append(self.tab)
         self.if_statement()
         # self.humanoid_print('if else')
 
@@ -100,20 +109,21 @@ class Coder:
         self.followup = False
 
     def try_statement(self):
+        self.tabs.append(self.tab)
         self.humanoid_print('try:')
         self.tab = self.tab + 1
         self.followup = True
 
     def except_statement(self):
         if random.randint(0, 1) is 0:
-            self.humanoid_print('except:')
+            self.humanoid_print('except:', matching_indent=True)
         else:
-            self.humanoid_print('except (EXCEPTION) as e:')
+            self.humanoid_print('except ' + Generators.generate_exception() + ' as e:', matching_indent=True)
         self.tab = self.tab + 1
         self.followup = True
 
     def create_loop(self):
-        loop = 'for ' + random.choice(list_of_vars) + ' in ' + self.generate_iterable() + ':'
+        loop = Generators.generate_loop()
         self.humanoid_print(loop)
         self.tab = self.tab + 1
         self.followup = True
@@ -150,7 +160,8 @@ class Coder:
             size = 3
         
         for _ in range(size):
-            self.humanoid_print('a line of a code_block')
+            # self.humanoid_print('a line of a code_block')
+            random.choice(self.action_choices_simple)(self)
         
         print()
 

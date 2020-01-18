@@ -13,7 +13,7 @@ def generate_number():
     return str(random.choice([random.randint(0, 10000), str(round(random.random(), 3))]))
 
 def generate_variable_name():
-    roll = random.choice(['one_word', 'two_words', 'three_words', 'special'])
+    roll = random.choice(['one_word', 'two_words', 'three_words', 'special', 'object'])
     if roll is 'one_word':
         choice = random.choice(variable_name_main)
         return choice
@@ -25,6 +25,9 @@ def generate_variable_name():
         return choice
     elif roll is 'special':
         choice = random.choice(variable_name_special)
+        return choice
+    elif roll is 'object':
+        choice = random.choice(variable_name_secondary) + '.' + random.choice(variable_name_main)
         return choice
 
 def generate_string():
@@ -115,3 +118,25 @@ def generate_comment():
         return '# ' + generate_value() + ' ' + random.choice(list_of_comments_type_two) 
     elif roll is 2:
         return '# ' + random.choice(list_of_comments_type_three)
+
+list_of_errors = ['IndexError', 'ModuleNotFoundError', 'KeyError', 'ImportError', 'StopIteration', 'TypeError', 'ValueError', 'NameError', 'KeyboardInterrupt', 'TypeError', 'UnicodeError', 'TabError']
+def generate_exception():
+    return random.choice(list_of_errors)
+
+def generate_iterable():
+    roll = random.choice(['range', 'var'])
+    if roll is 'range':
+        return 'range(' + str(random.randint(0, 50)) + ', ' + str(random.randint(50, 250)) + ')'
+    elif roll is 'var':
+        return generate_variable_name()
+    # cases:
+    # range of numbers
+    # in variable
+
+def generate_loop():
+    # loop = 'for ' + random.choice(list_of_vars) + ' in ' + self.generate_iterable() + ':'
+    loop_type = 'for' if random.randint(0, 1) is 0 else 'while'
+    if loop_type is 'for':
+        return 'for ' + generate_variable_name() + ' in ' + generate_iterable() + ':'
+    elif loop_type is 'while':
+        return 'while ' + get_statement() + ':'
