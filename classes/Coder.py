@@ -30,18 +30,23 @@ class Coder:
     def humanoid_print(self, print_out, matching_indent=None):
         if matching_indent is None:
             matching_indent = False
-        # print(self.tab)
+        
+        # can be optimized later
+        # --------
         if matching_indent is False:
             for _ in range(self.tab):
                     print('    ', end = '')
         else:
             offset = self.tabs.pop()
+            self.tab = offset
             for _ in range(offset):
                     print('    ', end = '')
+        # --------
+
         for index in range(len(print_out)):
             print(print_out[index], end = '')
             sys.stdout.flush()
-            time.sleep(random.randint(1, 10)/100)
+            time.sleep(random.randint(1, 10)/200)
             if index == len(print_out) - 1:
                 print()
         # time.sleep(0.05)
