@@ -97,7 +97,7 @@ def get_statement():
     # value 20%
     elif roll < 5:
         choice = random.choice([random.randint(0, 1000), round(random.random(), 3)])
-        return (Fore.LIGHTWHITE_EX, str(choice if random.randint(0, 1) is 0 else choice * -1))
+        return (Fore.LIGHTBLACK_EX, str(choice if random.randint(0, 1) is 0 else choice * -1))
     # string 10%
     elif roll is 5:
         return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.YELLOW, generate_string())]
