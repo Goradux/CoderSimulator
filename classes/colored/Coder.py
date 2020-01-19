@@ -144,7 +144,7 @@ class Coder:
         # self.humanoid_print('if else')
 
     def if_inline_statement(self):
-        if_inline_list = [(Fore.LIGHTWHITE_EX, random.choice(list_of_vars) + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTMAGENTA_EX, ' if '), (Fore.LIGHTWHITE_EX, '('), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ')'), (Fore.LIGHTMAGENTA_EX, ' else '), random.choice([(Fore.LIGHTWHITE_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTWHITE_EX, ' ')]
+        if_inline_list = [(Fore.LIGHTWHITE_EX, random.choice(list_of_vars) + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTMAGENTA_EX, ' if '), (Fore.LIGHTWHITE_EX, '('), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ')'), (Fore.LIGHTMAGENTA_EX, ' else '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTWHITE_EX, ' ')]
         self.humanoid_print(self.remove_nested(if_inline_list))
         self.followup = False
 
