@@ -100,7 +100,7 @@ def get_statement():
         return (Fore.LIGHTBLACK_EX, str(choice if random.randint(0, 1) is 0 else choice * -1))
     # string 10%
     elif roll is 5:
-        return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.YELLOW, generate_string())]
+        return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.LIGHTYELLOW_EX, generate_string())]
     # type() 10%
     elif roll is 6:
         return [(Fore.CYAN, 'type'), (Fore.LIGHTWHITE_EX, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'type'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.LIGHTYELLOW_EX, generate_string())]), (Fore.LIGHTWHITE_EX, ')')]
