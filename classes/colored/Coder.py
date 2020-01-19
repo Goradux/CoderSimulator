@@ -28,29 +28,6 @@ class Coder:
     buffered_actions = deque()
     followup = False
 
-
-    output1 = []
-    output2 = []
-    output3 = []
-    def removeNestings1(self, l): 
-        for i in l: 
-            if type(i) == list: 
-                self.removeNestings1(i) 
-            else: 
-                self.output1.append(i) 
-    def removeNestings2(self, l): 
-        for i in l: 
-            if type(i) == list: 
-                self.removeNestings2(i) 
-            else: 
-                self.output2.append(i)
-    def removeNestings3(self, l): 
-        for i in l: 
-            if type(i) == list: 
-                self.removeNestings3(i) 
-            else: 
-                self.output3.append(i)
-
     def remove_nested(self, nested_list, output_list=None):
         if output_list is None:
             output_list = []
@@ -64,7 +41,7 @@ class Coder:
     # new format of print_outs is a list of tuples (color, string)
     def humanoid_print(self, print_out=None, matching_indent=None):
         if print_out is None:
-            print_out = [(Fore.RESET, ' ')]
+            print_out = [(Fore.LIGHTWHITE_EX, ' ')]
         
         if matching_indent is None:
             matching_indent = False
@@ -147,18 +124,15 @@ class Coder:
     def generate_function_name(self):
         return Generators.generate_function_name()
 
-    # TODO extra space after the end of the statement before : 
     def if_statement(self):
-        if_list = [(Fore.MAGENTA, 'if '), Generators.get_statement(), (Fore.RESET, ':')]
+        if_list = [(Fore.LIGHTMAGENTA_EX, 'if '), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ':')]
         # self.humanoid_print('if ' + self.generate_statement() + ':')
         self.humanoid_print(self.remove_nested(if_list))
-        # self.removeNestings(if_list)
-        # self.humanoid_print(self.output)
         self.tab = self.tab + 1
         self.followup = True
 
     def else_statement(self):
-        else_list = [(Fore.MAGENTA, 'else'), (Fore.RESET, ':')]
+        else_list = [(Fore.LIGHTMAGENTA_EX, 'else'), (Fore.LIGHTWHITE_EX, ':')]
         # self.humanoid_print('else:', matching_indent=True)
         self.humanoid_print(else_list, matching_indent=True)
         self.tab = self.tab + 1
@@ -170,16 +144,14 @@ class Coder:
         # self.humanoid_print('if else')
 
     def if_inline_statement(self):
-        if_inline_list = [(Fore.RESET, random.choice(list_of_vars) + ' = '), (Fore.WHITE, Generators.generate_value()), (Fore.MAGENTA, ' if '), (Fore.RESET, '('), Generators.get_statement(), (Fore.RESET, ')'), (Fore.MAGENTA, ' else '), (Fore.WHITE, Generators.generate_value()), (Fore.RESET, ' ')]
+        if_inline_list = [(Fore.LIGHTWHITE_EX, random.choice(list_of_vars) + ' = '), (Fore.LIGHTWHITE_EX, Generators.generate_value()), (Fore.LIGHTMAGENTA_EX, ' if '), (Fore.LIGHTWHITE_EX, '('), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ')'), (Fore.LIGHTMAGENTA_EX, ' else '), (Fore.LIGHTWHITE_EX, Generators.generate_value()), (Fore.LIGHTWHITE_EX, ' ')]
         # self.humanoid_print(random.choice(list_of_vars) + ' = ' + Generators.generate_value() + ' if (' + Generators.get_statement() + ') else ' + Generators.generate_value())
         self.humanoid_print(self.remove_nested(if_inline_list))
-        # self.removeNestings(if_inline_list)
-        # self.humanoid_print(self.output)
         self.followup = False
 
     def try_statement(self):
         self.tabs.append(self.tab)
-        try_list = [(Fore.MAGENTA, 'try'), (Fore.RESET, ':')]
+        try_list = [(Fore.LIGHTMAGENTA_EX, 'try'), (Fore.LIGHTWHITE_EX, ':')]
         # self.humanoid_print('try:')
         self.humanoid_print(try_list)
         self.tab = self.tab + 1
@@ -187,10 +159,10 @@ class Coder:
 
     def except_statement(self):
         if random.randint(0, 1) is 0:
-            except_list = [(Fore.MAGENTA, 'except'), (Fore.RESET, ':')]
+            except_list = [(Fore.LIGHTMAGENTA_EX, 'except'), (Fore.LIGHTWHITE_EX, ':')]
             # self.humanoid_print('except:', matching_indent=True)
         else:
-            except_list = [(Fore.MAGENTA, 'except '), (Fore.CYAN, Generators.generate_exception()), (Fore.MAGENTA, ' as'), (Fore.RESET, ' e:')]
+            except_list = [(Fore.LIGHTMAGENTA_EX, 'except '), (Fore.CYAN, Generators.generate_exception()), (Fore.LIGHTMAGENTA_EX, ' as'), (Fore.LIGHTWHITE_EX, ' e:')]
             # self.humanoid_print('except ' + Generators.generate_exception() + ' as e:', matching_indent=True)
         self.humanoid_print(except_list, matching_indent=True)
         self.tab = self.tab + 1
@@ -199,13 +171,11 @@ class Coder:
     def create_loop(self):
         loop = Generators.generate_loop()
         self.humanoid_print(self.remove_nested(loop))
-        # self.removeNestings(loop)
-        # self.humanoid_print(self.output)
         self.tab = self.tab + 1
         self.followup = True
 
     def create_function(self):
-        function_list = [(Fore.MAGENTA, 'def '), (Fore.RESET, self.generate_function_name()), (Fore.RESET, ':')]
+        function_list = [(Fore.BLUE, 'def '), (Fore.LIGHTWHITE_EX, self.generate_function_name()), (Fore.LIGHTWHITE_EX, ':')]
         # self.humanoid_print('def ' + self.generate_function_name() + ':')
         self.humanoid_print(function_list)
         self.tab = self.tab + 1
@@ -215,19 +185,19 @@ class Coder:
         random_var = random.choice(list_of_vars)
         # self.vars_in_use.append(random_var)
         # output = random_var + ' = ' + self.generate_value()
-        assign_var_list = [(Fore.RESET, random_var + ' = '), (Fore.WHITE, self.generate_value())]
+        assign_var_list = [(Fore.LIGHTWHITE_EX, random_var + ' = '), (Fore.LIGHTWHITE_EX, self.generate_value())]
         # self.humanoid_print(output)
         self.humanoid_print(assign_var_list)
         self.followup = False
     
     def print_statement(self):
-        print_list = [(Fore.CYAN, 'print'), (Fore.RESET, '('), (Fore.RESET, random.choice([Generators.generate_number(), Generators.generate_function_name(), Generators.generate_variable_name()])), (Fore.RESET, ')'),]
+        print_list = [(Fore.CYAN, 'print'), (Fore.LIGHTWHITE_EX, '('), (Fore.LIGHTWHITE_EX, random.choice([Generators.generate_number(), Generators.generate_function_name(), Generators.generate_variable_name()])), (Fore.LIGHTWHITE_EX, ')'),]
         # self.humanoid_print('print(' + random.choice([Generators.get_statement(), Generators.generate_number(), Generators.generate_function_name(), Generators.generate_variable_name()]) + ')')
         self.humanoid_print(print_list)
         self.followup = False
     
     def execute_function_statement(self):
-        self.humanoid_print([(Fore.RESET, Generators.generate_function_name())])
+        self.humanoid_print([(Fore.LIGHTWHITE_EX, Generators.generate_function_name())])
         self.followup = False
 
     def comment_statement(self):
@@ -310,6 +280,7 @@ class Coder:
         self.do_next_action()
 
     def test(self):
-        self.if_statement()
-        self.if_statement()
-        self.if_statement()
+        self.choose_action()
+        self.roll_indent()
+        self.roll_space()
+        self.action_cleanup()

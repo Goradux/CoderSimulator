@@ -80,29 +80,29 @@ def get_statement():
     # comparing variables
 
     def get_symbol():
-        return random.choice([(Fore.BLUE, ' is '), (Fore.BLUE, ' is not '), (Fore.RESET, ' > '), (Fore.RESET, ' >= '), (Fore.RESET, ' <= '), (Fore.RESET, ' == ')])
+        return random.choice([(Fore.BLUE, ' is '), (Fore.BLUE, ' is not '), (Fore.LIGHTWHITE_EX, ' > '), (Fore.LIGHTWHITE_EX, ' >= '), (Fore.LIGHTWHITE_EX, ' <= '), (Fore.LIGHTWHITE_EX, ' == ')])
 
     # comparing expressions
     roll = random.randint(0, 9)
     # another expression, 30%
     if roll < 3:
-        return [(Fore.RESET, generate_variable_name()), get_symbol(), (Fore.RESET, str(random.choice([random.randint(0, 1000), round(random.random(), 3)]))), (Fore.BLUE, random.choice([' or ', ' and '])), get_statement(), (Fore.RESET, ' ')]
+        return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.LIGHTWHITE_EX, str(random.choice([random.randint(0, 1000), round(random.random(), 3)]))), (Fore.BLUE, random.choice([' or ', ' and '])), get_statement(), (Fore.LIGHTWHITE_EX, '')]
     # value 20%
     elif roll < 5:
         choice = random.choice([random.randint(0, 1000), round(random.random(), 3)])
-        return (Fore.RESET, str(choice if random.randint(0, 1) is 0 else choice * -1))
+        return (Fore.LIGHTWHITE_EX, str(choice if random.randint(0, 1) is 0 else choice * -1))
     # string 10%
     elif roll is 5:
-        return [(Fore.RESET, generate_variable_name()), get_symbol(), (Fore.YELLOW, generate_string())]
+        return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.YELLOW, generate_string())]
     # type 10%
     elif roll is 6:
-        return [(Fore.CYAN, 'type'), (Fore.RESET, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'type'), (Fore.RESET, '('), random.choice([(Fore.RESET, generate_variable_name()), (Fore.YELLOW, generate_string())]), (Fore.RESET, ')')]
+        return [(Fore.CYAN, 'type'), (Fore.LIGHTWHITE_EX, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'type'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.YELLOW, generate_string())]), (Fore.LIGHTWHITE_EX, ')')]
     # length 10%
     elif roll is 7:
-        return [(Fore.CYAN, 'len'), (Fore.RESET, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'len'), (Fore.RESET, '('), random.choice([(Fore.RESET, generate_variable_name()), (Fore.YELLOW, generate_string())]), (Fore.RESET, ')')]
+        return [(Fore.CYAN, 'len'), (Fore.LIGHTWHITE_EX, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'len'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.YELLOW, generate_string())]), (Fore.LIGHTWHITE_EX, ')')]
     # variables 20%
     elif roll >= 8:
-        return [(Fore.RESET, generate_variable_name()), get_symbol(), (Fore.RESET, generate_variable_name())]
+        return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.LIGHTWHITE_EX, generate_variable_name())]
 
     # '''hi source code nerd :)'''
     
@@ -140,7 +140,7 @@ def generate_loop():
     loop_type = 'for' if random.randint(0, 1) is 0 else 'while'
     if loop_type is 'for':
         # return 'for ' + generate_variable_name() + ' in ' + generate_iterable() + ':'
-        return [(Fore.MAGENTA, 'for '), (Fore.RESET, generate_variable_name()), (Fore.MAGENTA, ' in '), (Fore.RESET, generate_iterable()), (Fore.RESET, ':')]
+        return [(Fore.LIGHTMAGENTA_EX, 'for '), (Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.LIGHTMAGENTA_EX, ' in '), (Fore.LIGHTWHITE_EX, generate_iterable()), (Fore.LIGHTWHITE_EX, ':')]
     elif loop_type is 'while':
         # return 'while ' + get_statement() + ':'
-        return [(Fore.MAGENTA, 'while '), get_statement(), (Fore.RESET, ': ')]
+        return [(Fore.LIGHTMAGENTA_EX, 'while '), get_statement(), (Fore.LIGHTWHITE_EX, ': ')]
