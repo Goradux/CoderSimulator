@@ -35,7 +35,7 @@ def generate_variable_name():
 def generate_string():
     roll = random.choice(['one_word', 'two_words', 'three_words'])
     if roll is 'one_word':
-        choice = random.choice(variable_name_main)
+        choice = "'" + random.choice(variable_name_main) + "'"
         return choice
     elif roll is 'two_words':
         choice = "'" + random.choice(variable_name_secondary) + ' ' + random.choice(variable_name_main) + "'"
@@ -50,26 +50,33 @@ def generate_value():
 def generate_arguments():
     roll = random.choice(['zero', 'one', 'two'])
     if roll is 'zero':
-        return ''
+        return []
     elif roll is 'one':
         first = random.choice([generate_variable_name(), generate_string(), generate_number()])
-        return first
+        # return first
+        return random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.LIGHTYELLOW_EX, generate_string()), (Fore.LIGHTBLACK_EX, generate_number())])
     elif roll is 'two':
-        first =  random.choice([generate_variable_name(), generate_string(), generate_number()])
-        second = random.choice([generate_variable_name(), generate_string(), generate_number()])
-        return first + ', ' + second
+        # first =  random.choice([generate_variable_name(), generate_string(), generate_number()])
+        # second = random.choice([generate_variable_name(), generate_string(), generate_number()])
+        # return first + ', ' + second
+        first = random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.LIGHTYELLOW_EX, generate_string()), (Fore.LIGHTBLACK_EX, generate_number())])
+        second = random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.LIGHTYELLOW_EX, generate_string()), (Fore.LIGHTBLACK_EX, generate_number())])
+        return [first, (Fore.LIGHTWHITE_EX, ', '), second]
 
 def generate_function_name():
     roll = random.choice(['one_word', 'two_words', 'three_words'])
     if roll is 'one_word':
-        choice = random.choice(function_name_main) + '(' + generate_arguments() + ')'
-        return choice
+        # choice = random.choice(function_name_main) + '(' + generate_arguments() + ')'
+        # return choice
+        return [(Fore.LIGHTWHITE_EX, random.choice(function_name_main) + '('), generate_arguments(), (Fore.LIGHTWHITE_EX, ')')]
     elif roll is 'two_words':
-        choice = random.choice(function_name_main) + '_' + random.choice(variable_name_main) + '(' + generate_arguments() + ')'
-        return choice
+        # choice = random.choice(function_name_main) + '_' + random.choice(variable_name_main) + '(' + generate_arguments() + ')'
+        # return choice
+        return [(Fore.LIGHTWHITE_EX, random.choice(function_name_main) + '_' + random.choice(variable_name_main) + '('), generate_arguments(), (Fore.LIGHTWHITE_EX, ')')]
     elif roll is 'three_words':
-        choice = random.choice(function_name_main) + '_' + random.choice(variable_name_secondary) + '_' + random.choice(variable_name_main) + '(' + generate_arguments() + ')'
-        return choice
+        # choice = random.choice(function_name_main) + '_' + random.choice(variable_name_secondary) + '_' + random.choice(variable_name_main) + '(' + generate_arguments() + ')'
+        # return choice
+        return [(Fore.LIGHTWHITE_EX, random.choice(function_name_main) + '_' + random.choice(variable_name_secondary) + '_' + random.choice(variable_name_main) + '('), generate_arguments(), (Fore.LIGHTWHITE_EX, ')')]
 
 def get_statement():
     # cases:
@@ -86,7 +93,7 @@ def get_statement():
     roll = random.randint(0, 9)
     # another expression, 30%
     if roll < 3:
-        return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.LIGHTWHITE_EX, str(random.choice([random.randint(0, 1000), round(random.random(), 3)]))), (Fore.BLUE, random.choice([' or ', ' and '])), get_statement(), (Fore.LIGHTWHITE_EX, '')]
+        return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.LIGHTBLACK_EX, str(random.choice([random.randint(0, 1000), round(random.random(), 3)]))), (Fore.BLUE, random.choice([' or ', ' and '])), get_statement(), (Fore.LIGHTWHITE_EX, '')]
     # value 20%
     elif roll < 5:
         choice = random.choice([random.randint(0, 1000), round(random.random(), 3)])
@@ -94,12 +101,12 @@ def get_statement():
     # string 10%
     elif roll is 5:
         return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.YELLOW, generate_string())]
-    # type 10%
+    # type() 10%
     elif roll is 6:
-        return [(Fore.CYAN, 'type'), (Fore.LIGHTWHITE_EX, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'type'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.YELLOW, generate_string())]), (Fore.LIGHTWHITE_EX, ')')]
-    # length 10%
+        return [(Fore.CYAN, 'type'), (Fore.LIGHTWHITE_EX, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'type'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.LIGHTYELLOW_EX, generate_string())]), (Fore.LIGHTWHITE_EX, ')')]
+    # len() 10%
     elif roll is 7:
-        return [(Fore.CYAN, 'len'), (Fore.LIGHTWHITE_EX, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'len'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.YELLOW, generate_string())]), (Fore.LIGHTWHITE_EX, ')')]
+        return [(Fore.CYAN, 'len'), (Fore.LIGHTWHITE_EX, '(' + generate_variable_name() + ')'), get_symbol(), (Fore.CYAN, 'len'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTWHITE_EX, generate_variable_name()), (Fore.LIGHTYELLOW_EX, generate_string())]), (Fore.LIGHTWHITE_EX, ')')]
     # variables 20%
     elif roll >= 8:
         return [(Fore.LIGHTWHITE_EX, generate_variable_name()), get_symbol(), (Fore.LIGHTWHITE_EX, generate_variable_name())]

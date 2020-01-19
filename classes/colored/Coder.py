@@ -134,7 +134,7 @@ class Coder:
     def else_statement(self):
         else_list = [(Fore.LIGHTMAGENTA_EX, 'else'), (Fore.LIGHTWHITE_EX, ':')]
         # self.humanoid_print('else:', matching_indent=True)
-        self.humanoid_print(else_list, matching_indent=True)
+        self.humanoid_print(self.remove_nested(else_list), matching_indent=True)
         self.tab = self.tab + 1
         self.followup = True
 
@@ -144,8 +144,7 @@ class Coder:
         # self.humanoid_print('if else')
 
     def if_inline_statement(self):
-        if_inline_list = [(Fore.LIGHTWHITE_EX, random.choice(list_of_vars) + ' = '), (Fore.LIGHTWHITE_EX, Generators.generate_value()), (Fore.LIGHTMAGENTA_EX, ' if '), (Fore.LIGHTWHITE_EX, '('), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ')'), (Fore.LIGHTMAGENTA_EX, ' else '), (Fore.LIGHTWHITE_EX, Generators.generate_value()), (Fore.LIGHTWHITE_EX, ' ')]
-        # self.humanoid_print(random.choice(list_of_vars) + ' = ' + Generators.generate_value() + ' if (' + Generators.get_statement() + ') else ' + Generators.generate_value())
+        if_inline_list = [(Fore.LIGHTWHITE_EX, random.choice(list_of_vars) + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTMAGENTA_EX, ' if '), (Fore.LIGHTWHITE_EX, '('), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ')'), (Fore.LIGHTMAGENTA_EX, ' else '), random.choice([(Fore.LIGHTWHITE_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTWHITE_EX, ' ')]
         self.humanoid_print(self.remove_nested(if_inline_list))
         self.followup = False
 
@@ -153,7 +152,7 @@ class Coder:
         self.tabs.append(self.tab)
         try_list = [(Fore.LIGHTMAGENTA_EX, 'try'), (Fore.LIGHTWHITE_EX, ':')]
         # self.humanoid_print('try:')
-        self.humanoid_print(try_list)
+        self.humanoid_print(self.remove_nested(try_list))
         self.tab = self.tab + 1
         self.followup = True
 
@@ -164,7 +163,7 @@ class Coder:
         else:
             except_list = [(Fore.LIGHTMAGENTA_EX, 'except '), (Fore.CYAN, Generators.generate_exception()), (Fore.LIGHTMAGENTA_EX, ' as'), (Fore.LIGHTWHITE_EX, ' e:')]
             # self.humanoid_print('except ' + Generators.generate_exception() + ' as e:', matching_indent=True)
-        self.humanoid_print(except_list, matching_indent=True)
+        self.humanoid_print(self.remove_nested(except_list), matching_indent=True)
         self.tab = self.tab + 1
         self.followup = True
 
@@ -175,34 +174,29 @@ class Coder:
         self.followup = True
 
     def create_function(self):
-        function_list = [(Fore.BLUE, 'def '), (Fore.LIGHTWHITE_EX, self.generate_function_name()), (Fore.LIGHTWHITE_EX, ':')]
-        # self.humanoid_print('def ' + self.generate_function_name() + ':')
-        self.humanoid_print(function_list)
+        function_list = [(Fore.BLUE, 'def '), Generators.generate_function_name(), (Fore.LIGHTWHITE_EX, ':')]
+        self.humanoid_print(self.remove_nested(function_list))
         self.tab = self.tab + 1
         self.followup = True
 
     def assign_var_value(self):
         random_var = random.choice(list_of_vars)
-        # self.vars_in_use.append(random_var)
-        # output = random_var + ' = ' + self.generate_value()
-        assign_var_list = [(Fore.LIGHTWHITE_EX, random_var + ' = '), (Fore.LIGHTWHITE_EX, self.generate_value())]
-        # self.humanoid_print(output)
-        self.humanoid_print(assign_var_list)
+        assign_var_list = [(Fore.LIGHTWHITE_EX, random_var + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())])]
+        self.humanoid_print(self.remove_nested(assign_var_list))
         self.followup = False
     
     def print_statement(self):
-        print_list = [(Fore.CYAN, 'print'), (Fore.LIGHTWHITE_EX, '('), (Fore.LIGHTWHITE_EX, random.choice([Generators.generate_number(), Generators.generate_function_name(), Generators.generate_variable_name()])), (Fore.LIGHTWHITE_EX, ')'),]
-        # self.humanoid_print('print(' + random.choice([Generators.get_statement(), Generators.generate_number(), Generators.generate_function_name(), Generators.generate_variable_name()]) + ')')
-        self.humanoid_print(print_list)
+        print_list = [(Fore.CYAN, 'print'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), Generators.generate_function_name(), (Fore.LIGHTWHITE_EX, Generators.generate_variable_name())]), (Fore.LIGHTWHITE_EX, ')'),]
+        self.humanoid_print(self.remove_nested(print_list))
         self.followup = False
     
     def execute_function_statement(self):
-        self.humanoid_print([(Fore.LIGHTWHITE_EX, Generators.generate_function_name())])
+        self.humanoid_print(self.remove_nested([Generators.generate_function_name()]))
         self.followup = False
 
     def comment_statement(self):
         comment = Generators.generate_comment()
-        self.humanoid_print([(Fore.GREEN, comment)])
+        self.humanoid_print(self.remove_nested([(Fore.GREEN, comment)]))
 
     # def pass_statement(self):
     #     self.humanoid_print('pass')
