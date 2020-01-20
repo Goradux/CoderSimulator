@@ -39,6 +39,7 @@ def main():
         from classes.default.Coder import Coder
     coder = Coder(speed)
     coder.start()
+    # coder.test()
 
 # Since the main method is invoked recursively forever,
 # Python recursion limit has to be increased

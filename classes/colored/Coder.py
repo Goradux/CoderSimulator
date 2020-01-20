@@ -6,28 +6,24 @@ from colorama import Fore, Back, Style
 from colorama import init as coloramainit
 coloramainit()
 
-#a way to reset the colors is to call print(Style.RESET_ALL, end='')
-
 # paths have to be relative to __main__ in Python, otherwise use sys.path
 import classes.colored.string_generators.Generators as Generators
 
-# deque is faster O(1) than a list O(n)
+# deque is faster with O(1) than a list with O(n)
 # use it like this: stack = deque(); stack.append(var); var = stack.pop();
 from collections import deque
-
-list_of_vars = ['x', '_', 'y', 'i', 'index', 'foo', 'bar', 'foobar', 'amount', 'width', 'height']
-list_of_functions = ['add', 'remove']
 
 class Coder:
 
     speed = 200
     next_action = None
-    # buffered_action = None
     tab = 0
     tabs = deque()
-    vars_in_use = []
     buffered_actions = deque()
     followup = False
+
+    def __init__(self, speed=200):
+        self.speed = speed
 
     def remove_nested(self, nested_list, output_list=None):
         if output_list is None:
@@ -47,40 +43,21 @@ class Coder:
         if matching_indent is None:
             matching_indent = False
         
-        # can be optimized later
-        # --------
         if matching_indent is False:
             pass
         else:
             self.tab = self.tabs.pop()
-        
         for _ in range(self.tab):
             print('    ', end = '')
-        # --------
 
-        # ######################
         for element in print_out:
             color, text = element
-            # print('', end='')
             print(color, end = '')
             for letter in text:
                 print(letter, end = '')
                 sys.stdout.flush()
-                time.sleep(random.randint(1, 10)/self.speed)
-        # print('\r\n', end='')
+                time.sleep(random.randint(1, 10) / self.speed)
         print()
-        # ######################
-
-        # OLD AND WORKING
-        # for index in range(len(print_out)):
-        #     print(print_out[index], end = '')
-        #     sys.stdout.flush()
-        #     time.sleep(random.randint(1, 10)/200)
-        #     if index == len(print_out) - 1:
-        #         print()
-
-
-        # time.sleep(0.05)
         # time.sleep(1 if random.randint(0, 10) == 0 else 0)
 
     def roll_indent(self):
@@ -145,7 +122,7 @@ class Coder:
         # self.humanoid_print('if else')
 
     def if_inline_statement(self):
-        if_inline_list = [(Fore.LIGHTWHITE_EX, random.choice(list_of_vars) + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTMAGENTA_EX, ' if '), (Fore.LIGHTWHITE_EX, '('), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ')'), (Fore.LIGHTMAGENTA_EX, ' else '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTWHITE_EX, ' ')]
+        if_inline_list = [(Fore.LIGHTWHITE_EX, Generators.generate_variable_name() + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTMAGENTA_EX, ' if '), (Fore.LIGHTWHITE_EX, '('), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ')'), (Fore.LIGHTMAGENTA_EX, ' else '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTWHITE_EX, ' ')]
         self.humanoid_print(self.remove_nested(if_inline_list))
         self.followup = False
 
@@ -181,7 +158,7 @@ class Coder:
         self.followup = True
 
     def assign_var_value(self):
-        random_var = random.choice(list_of_vars)
+        random_var = Generators.generate_variable_name()
         assign_var_list = [(Fore.LIGHTWHITE_EX, random_var + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())])]
         self.humanoid_print(self.remove_nested(assign_var_list))
         self.followup = False
@@ -257,7 +234,6 @@ class Coder:
 
     def action_cleanup(self):
         self.next_action = None
-        # self.buffered_action = None
 
     # the main action loop, recursive
     def do_next_action(self):
@@ -268,12 +244,10 @@ class Coder:
 
         self.do_next_action()
 
-    def __init__(self, speed=200):
-        self.speed = speed
-
     def start(self):
         self.do_next_action()
 
+    # a test method. Executes an action block once
     def test(self):
         self.choose_action()
         self.roll_indent()

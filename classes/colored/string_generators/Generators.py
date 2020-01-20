@@ -3,7 +3,7 @@ import math
 
 from colorama import Fore
 
-variable_name_special = ['i', 'j', 'z', '_', 'count']
+variable_name_special = ['i', 'j', 'z', '_', 'count', 'x', 'y', 'index', 'foo', 'bar', 'foobar', 'amount', 'width', 'height']
 variable_name_main = ['main', 'count', 'size', 'width', 'height', 'area', 'volume', 'amount', 'cell', 'sum']
 variable_name_secondary = ['builder', 'concurrent', 'today', 'old', 'new', 'another', 'server', 'client', 'remote']
 variable_name_tertiary = ['brown', 'red', 'black', 'green', 'blue', 'red', 'white', 'yellow', 'rare', 'common', 'legendary', 'meme']
