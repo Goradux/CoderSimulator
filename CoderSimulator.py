@@ -1,16 +1,17 @@
-# The program supports two main modes: multicolor and monochromatic
-# The default preset is multicolor. To run the program in monochromatic
-# mode, use '-m' argument in the command line.
+# The program supports two output modes: multicolor and monochromatic
+# The default is set to multicolor.
+# To run the program in monochromatic mode:
+# python CoderSimulator.py -m
+# To specify speed of typing out the text (between 10 and 10000), run:
+# python CoderSimulator.py -s 200
 
 import sys, argparse, signal
 
 def command_line_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', '--mono', help="The output will be monochromatic.", action='store_true')
-    parser.add_argument('-s', '--speed', help="Sets the speed of typing the text out. Default: 200. Minimum: 10. Maximum: 10000")
+    parser.add_argument('-s', '--speed', help="Sets the speed of typing the text out. Default: 200. Minimum: 10. Maximum: 10000.")
     args = parser.parse_args()
-    # print(args)
-    # print(MONOCHROMATIC)
     monochromatic = args.mono
     speed = args.speed
     if speed is None:
