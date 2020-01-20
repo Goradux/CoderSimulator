@@ -93,6 +93,7 @@ class Coder:
             print()
 
 
+    # each word in each line of code is represented as a tuple (color, text)
     def if_statement(self):
         if_list = [(Fore.LIGHTMAGENTA_EX, 'if '), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ':')]
         self.humanoid_print(self.remove_nested(if_list))
@@ -102,7 +103,6 @@ class Coder:
 
     def else_statement(self):
         else_list = [(Fore.LIGHTMAGENTA_EX, 'else'), (Fore.LIGHTWHITE_EX, ':')]
-        # self.humanoid_print('else:', matching_indent=True)
         self.humanoid_print(self.remove_nested(else_list), matching_indent=True)
         self.tab = self.tab + 1
         self.followup = True
@@ -111,7 +111,6 @@ class Coder:
     def if_else_statement(self):
         self.tabs.append(self.tab)
         self.if_statement()
-        # self.humanoid_print('if else')
 
 
     def if_inline_statement(self):
@@ -123,7 +122,6 @@ class Coder:
     def try_statement(self):
         self.tabs.append(self.tab)
         try_list = [(Fore.LIGHTMAGENTA_EX, 'try'), (Fore.LIGHTWHITE_EX, ':')]
-        # self.humanoid_print('try:')
         self.humanoid_print(self.remove_nested(try_list))
         self.tab = self.tab + 1
         self.followup = True
@@ -132,10 +130,8 @@ class Coder:
     def except_statement(self):
         if random.randint(0, 1) is 0:
             except_list = [(Fore.LIGHTMAGENTA_EX, 'except'), (Fore.LIGHTWHITE_EX, ':')]
-            # self.humanoid_print('except:', matching_indent=True)
         else:
             except_list = [(Fore.LIGHTMAGENTA_EX, 'except '), (Fore.CYAN, Generators.generate_exception()), (Fore.LIGHTMAGENTA_EX, ' as'), (Fore.LIGHTWHITE_EX, ' e:')]
-            # self.humanoid_print('except ' + Generators.generate_exception() + ' as e:', matching_indent=True)
         self.humanoid_print(self.remove_nested(except_list), matching_indent=True)
         self.tab = self.tab + 1
         self.followup = True

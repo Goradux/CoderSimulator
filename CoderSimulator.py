@@ -25,7 +25,7 @@ def command_line_arguments():
         print('Bad speed value. Speed should be in the interval [10, 10000].')
         print('Terminating.')
         sys.exit(1)
-    return (monochromatic, speed)
+    return monochromatic, speed
 
 
 def signal_handler(sig, frame):
@@ -34,8 +34,7 @@ def signal_handler(sig, frame):
 
 
 def main():
-    arguments = command_line_arguments()
-    monochromatic, speed = arguments
+    monochromatic, speed = command_line_arguments()
     if monochromatic is False:
         from classes.colored.Coder import Coder
     else:

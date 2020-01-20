@@ -7,45 +7,43 @@ import classes.default.string_generators.Generators as Generators
 # use it like this: stack = deque(); stack.append(var); var = stack.pop();
 from collections import deque
 
-list_of_vars = ['x', '_', 'y', 'i', 'index', 'foo', 'bar', 'foobar', 'amount', 'width', 'height']
-list_of_functions = ['add', 'remove']
 
 class Coder:
 
-    speed = 200
-    next_action = None
-    # buffered_action = None
-    tab = 0
-    tabs = deque()
-    vars_in_use = []
-    buffered_actions = deque()
-    followup = False
+    speed = 200                 # current printing speed
+    next_action = None          # what is the next action to perform
+    tab = 0                     # current indentation level (hardcoded to not exceed 5)
+    tabs = deque()              # buffered indentations, for if/else else should be same lvl as if
+    buffered_actions = deque()  # buffered actions, for if/else else goes to the buffer
+    followup = False            # whether a followup action is required, for if: def: try:, etc
 
+
+    def __init__(self, speed=200):
+        self.speed = speed
+
+
+    # function that simulates typing in code at human speeds.
+    # Input: matching_indent - boolean, used only for else or except statements
     def humanoid_print(self, print_out, matching_indent=None):
         if matching_indent is None:
             matching_indent = False
         
-        # can be optimized later
-        # --------
         if matching_indent is False:
-            for _ in range(self.tab):
-                    print('    ', end = '')
+            pass
         else:
-            offset = self.tabs.pop()
-            self.tab = offset
-            for _ in range(offset):
-                    print('    ', end = '')
-        # --------
+            self.tab = self.tabs.pop()
+        for _ in range(self.tab):
+            print('    ', end = '')
 
-        for index in range(len(print_out)):
-            print(print_out[index], end = '')
+        for letter in print_out:
+            print(letter, end='')
             sys.stdout.flush()
             time.sleep(random.randint(1, 10)/self.speed)
-            if index == len(print_out) - 1:
-                print()
-        # time.sleep(0.05)
-        # time.sleep(1 if random.randint(0, 10) == 0 else 0)
+        print()
 
+
+    # rolls dice to whether continue generating code on the current indentation
+    # level, or go back 1 (or 2) tabs, if the code allows
     def roll_indent(self):
         # random roll for a chance to indent 1 level back
         if self.tab > 0 and self.followup == False:
@@ -55,63 +53,48 @@ class Coder:
                 if len(self.buffered_actions) > 0:
                     self.buffered_actions.pop()()
                     self.followup = True
-                    # deindent = self.buffered_actions.pop()
-                    # print(deindent)
             elif roll < 85:
-
-                #BUG THIS GOT BROKEN
+                # if there are no actions in the buffer, allow for a "-2 tabs" option
                 if len(self.buffered_actions) == 0:
                     self.tab = self.tab - 2
-                    # self.buffered_actions.pop()()
-                    # self.followup = True
-                    # deindent = self.buffered_actions.pop()
-                    # print(deindent)
-            self.tab = 0 if self.tab < 0 else self.tab 
-        # 25% chance to go back one level
-        # # 10% chance to go back two levels
+            self.tab = 0 if self.tab < 0 else self.tab
 
+
+    # Function that prints an empty line randomly (15% chance)
     def roll_space(self):
         roll = random.randint(0, 99)
         if roll < 15:
             print()
 
-    def generate_statement(self):
-        return Generators.get_statement()
-
-    def generate_value(self):
-        return Generators.generate_value()
-
-    # def generate_iterable(self):
-    #     iterable = 'range(' + str(random.randint(0, 50)) + ', ' + str(random.randint(50, 250)) + ')'
-    #     return '(ITERABLE)'
-    
-    def generate_function_name(self):
-        return Generators.generate_function_name()
 
     def if_statement(self):
-        self.humanoid_print('if ' + self.generate_statement() + ':')
+        self.humanoid_print('if ' + Generators.get_statement() + ':')
         self.tab = self.tab + 1
         self.followup = True
+
 
     def else_statement(self):
         self.humanoid_print('else:', matching_indent=True)
         self.tab = self.tab + 1
         self.followup = True
 
+
     def if_else_statement(self):
         self.tabs.append(self.tab)
         self.if_statement()
-        # self.humanoid_print('if else')
+
 
     def if_inline_statement(self):
-        self.humanoid_print(random.choice(list_of_vars) + ' = ' + Generators.generate_value() + ' if (' + Generators.get_statement() + ') else ' + Generators.generate_value())
+        self.humanoid_print(Generators.generate_variable_name() + ' = ' + Generators.generate_value() + ' if (' + Generators.get_statement() + ') else ' + Generators.generate_value())
         self.followup = False
+
 
     def try_statement(self):
         self.tabs.append(self.tab)
         self.humanoid_print('try:')
         self.tab = self.tab + 1
         self.followup = True
+
 
     def except_statement(self):
         if random.randint(0, 1) is 0:
@@ -121,56 +104,51 @@ class Coder:
         self.tab = self.tab + 1
         self.followup = True
 
+
     def create_loop(self):
         loop = Generators.generate_loop()
         self.humanoid_print(loop)
         self.tab = self.tab + 1
         self.followup = True
 
+
     def create_function(self):
-        self.humanoid_print('def ' + self.generate_function_name() + ':')
+        self.humanoid_print('def ' + Generators.generate_function_name() + ':')
         self.tab = self.tab + 1
         self.followup = True
 
+
     def assign_var_value(self):
-        random_var = random.choice(list_of_vars)
-        # self.vars_in_use.append(random_var)
-        output = random_var + ' = ' + self.generate_value()
+        random_var = Generators.generate_variable_name()
+        output = random_var + ' = ' + Generators.generate_value()
         self.humanoid_print(output)
         self.followup = False
     
+
     def print_statement(self):
         self.humanoid_print('print(' + random.choice([Generators.get_statement(), Generators.generate_number(), Generators.generate_function_name(), Generators.generate_variable_name()]) + ')')
         self.followup = False
     
+
     def execute_function_statement(self):
         self.humanoid_print(Generators.generate_function_name())
         self.followup = False
+
 
     def comment_statement(self):
         comment = Generators.generate_comment()
         self.humanoid_print(comment)
 
-    # def pass_statement(self):
-    #     self.humanoid_print('pass')
 
+    # a composite block that randomly executes 3 actions from a simple action list
     def code_block(self, size=None):
         if size is None:
             size = 3
         
         for _ in range(size):
-            # self.humanoid_print('a line of a code_block')
             random.choice(self.action_choices_simple)(self)
-        
         print()
 
-    # def code_block_bigger(self):
-    #     self.code_block(5)
-    #     pass
-
-    # def code_block_biggest(self):
-    #     self.code_block(7)
-    #     pass
 
     # a set of all possible actions
     action_choices = [if_else_statement, try_statement, create_loop, create_function,
@@ -179,20 +157,20 @@ class Coder:
     # a set of actions that do not require indentation
     action_choices_simple = [assign_var_value, print_statement, execute_function_statement,
         comment_statement, code_block]
+    # chooses randomly an action to perform from the list above and executes it.
     def choose_action(self):
-        
+
         # choose the next action
         self.next_action = random.choice(self.action_choices) if self.tab < 5 else random.choice(self.action_choices_simple)
         
         #perform the next action
         self.next_action(self)
-        
 
 
         # these following two actions are composite, and require a second part with
-        # indentation back and forth
-        # NOTE: compared to the part of the action_choices and not the
-        # functions themselves because the memory slots are different
+        # indentation that has to be properly aligned
+        # NOTE: the if statement compares to the part of the action_choices and not the
+        # functions themselves because their position in memory is different
         
         # at least one statement is required so that it wont indent back on empty line
 
@@ -207,21 +185,18 @@ class Coder:
             self.next_action = random.choice(self.action_choices_simple)
             self.next_action(self)
 
-    def action_cleanup(self):
-        self.next_action = None
-        # self.buffered_action = None
 
-    # the main action loop, recursive
+    # The main action block of the simulation.
+    # Rolls a random action.
+    # Rolls a random indentation check.
+    # Rolls a random extra new line.
     def do_next_action(self):
         self.choose_action()
         self.roll_indent()
         self.roll_space()
-        self.action_cleanup()
 
-        self.do_next_action()
 
-    def __init__(self, speed=200):
-        self.speed = speed
-
+    # Call this to start the simulation.
     def start(self):
-        self.do_next_action()
+        while True:
+            self.do_next_action()
