@@ -20,6 +20,7 @@ list_of_functions = ['add', 'remove']
 
 class Coder:
 
+    speed = 200
     next_action = None
     # buffered_action = None
     tab = 0
@@ -65,7 +66,7 @@ class Coder:
             for letter in text:
                 print(letter, end = '')
                 sys.stdout.flush()
-                time.sleep(random.randint(1, 10)/200)
+                time.sleep(random.randint(1, 10)/self.speed)
         # print('\r\n', end='')
         print()
         # ######################
@@ -267,8 +268,8 @@ class Coder:
 
         self.do_next_action()
 
-    # def __init__(self):
-    #     print('Coder init done')
+    def __init__(self, speed=200):
+        self.speed = speed
 
     def start(self):
         self.do_next_action()

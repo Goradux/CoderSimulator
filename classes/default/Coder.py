@@ -1,12 +1,5 @@
 import sys, time, random
 
-# pip install colorama
-# https://pypi.org/project/colorama/
-from colorama import Fore, Back, Style
-from colorama import init as coloramainit
-coloramainit()
-#a way to reset the colors is to call print(Style.RESET_ALL, end='')
-
 # paths have to be relative to __main__ in Python, otherwise use sys.path
 import classes.default.string_generators.Generators as Generators
 
@@ -19,6 +12,7 @@ list_of_functions = ['add', 'remove']
 
 class Coder:
 
+    speed = 200
     next_action = None
     # buffered_action = None
     tab = 0
@@ -46,7 +40,7 @@ class Coder:
         for index in range(len(print_out)):
             print(print_out[index], end = '')
             sys.stdout.flush()
-            time.sleep(random.randint(1, 10)/200)
+            time.sleep(random.randint(1, 10)/self.speed)
             if index == len(print_out) - 1:
                 print()
         # time.sleep(0.05)
@@ -226,8 +220,8 @@ class Coder:
 
         self.do_next_action()
 
-    # def __init__(self):
-    #     print('Coder init done')
+    def __init__(self, speed=200):
+        self.speed = speed
 
     def start(self):
         self.do_next_action()
