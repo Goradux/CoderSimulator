@@ -36,7 +36,8 @@ In the project root directory:
 
 | Short | Long | Function |
 | --- |--- | --- |
-| -m | --mono | Runs the program in monochromatic mode |
+| -m | --mono | Runs in monochromatic mode |
+| -s 200 | --speed 200 | Sets the speed. Default: 200. Min: 10. Max 10000. |
 
 # Why?
 
