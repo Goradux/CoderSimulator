@@ -1,19 +1,27 @@
-# Supported modes: 'colored', 'default'
-MODE = 'colored'
+# The program supports two main modes: multicolor and monochromatic
+# The default preset is multicolor. To run the program in monochromatic
+# mode, use '-m' argument in the command line.
 
-import time, datetime, sys
-
+import sys, argparse, signal
 sys.setrecursionlimit(10**6)
 
-if MODE is None or MODE is 'colored':
+parser = argparse.ArgumentParser()
+parser.add_argument('-m', '--mono', help="The output will be monochromatic.", action='store_true')
+args = parser.parse_args()
+# print(args)
+# print(MONOCHROMATIC)
+MONOCHROMATIC = args.mono
+
+def signal_handler(sig, frame):
+    print('\nsys.exit(0)')
+    sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
+
+if MONOCHROMATIC is False:
     from classes.colored.Coder import Coder
     coder = Coder()
     coder.start()
-elif MODE is 'default':
+else:
     from classes.default.Coder import Coder
     coder = Coder()
     coder.start()
-# coder.test()
-
-# text = 'some string of text'
-# coder.humanoid_print(text)
