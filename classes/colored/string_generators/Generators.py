@@ -115,7 +115,6 @@ def get_statement():
     
 
 list_of_comments_type_one = ['The following code is responsible for', 'Check out:', 'Explaining', '!IMPORTANT', 'TODO', 'BUG']
-
 list_of_comments_type_two = ['is the focus here', '- to finish', 'not generating then expected output', 'DON\'T TOUCH!']
 list_of_comments_type_three = ['Important function:', 'Do not forget to declare:', 'Determines the outcome', 'Check the wiki:', 'BTW, www.github.com/Goradux']
 def generate_comment():

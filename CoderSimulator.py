@@ -7,6 +7,7 @@
 
 import sys, argparse, signal
 
+
 def command_line_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', '--mono', help="The output will be monochromatic.", action='store_true')
@@ -26,9 +27,11 @@ def command_line_arguments():
         sys.exit(1)
     return (monochromatic, speed)
 
+
 def signal_handler(sig, frame):
     # print('\nsys.exit(0)')
     sys.exit(0)
+
 
 def main():
     arguments = command_line_arguments()
@@ -39,14 +42,11 @@ def main():
         from classes.default.Coder import Coder
     coder = Coder(speed)
     coder.start()
-    # coder.test()
 
-# Since the main method is invoked recursively forever,
-# Python recursion limit has to be increased
-sys.setrecursionlimit(10**6)
 
 # Set up Ctrl + C interrupt handler
 signal.signal(signal.SIGINT, signal_handler)
+
 
 # Start the simulator
 main()

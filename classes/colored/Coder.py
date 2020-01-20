@@ -15,16 +15,20 @@ from collections import deque
 
 class Coder:
 
-    speed = 200
-    next_action = None
-    tab = 0
-    tabs = deque()
-    buffered_actions = deque()
-    followup = False
+    speed = 200                 # current printing speed
+    next_action = None          # what is the next action to perform
+    tab = 0                     # current indentation level (hardcoded to not exceed 5)
+    tabs = deque()              # buffered indentations, for if/else else should be same lvl as if
+    buffered_actions = deque()  # buffered actions, for if/else else goes to the buffer
+    followup = False            # whether a followup action is required, for if: def: try:, etc
+
 
     def __init__(self, speed=200):
         self.speed = speed
 
+
+    # function used for flattening nested lists of tuples (color, word) that
+    # are used as the main building material when printing a colored line of code
     def remove_nested(self, nested_list, output_list=None):
         if output_list is None:
             output_list = []
@@ -35,7 +39,10 @@ class Coder:
                 output_list.append(element)
         return output_list
 
-    # new format of print_outs is a list of tuples (color, string)
+
+    # function that simulates typing in code at human speeds.
+    # Input: print_out - a list of tuples (color, word)
+    # Input: matching_indent - boolean, used only for else or except statements
     def humanoid_print(self, print_out=None, matching_indent=None):
         if print_out is None:
             print_out = [(Fore.LIGHTWHITE_EX, ' ')]
@@ -51,15 +58,18 @@ class Coder:
             print('    ', end = '')
 
         for element in print_out:
-            color, text = element
+            color, word = element
             print(color, end = '')
-            for letter in text:
+            for letter in word:
                 print(letter, end = '')
                 sys.stdout.flush()
                 time.sleep(random.randint(1, 10) / self.speed)
         print()
         # time.sleep(1 if random.randint(0, 10) == 0 else 0)
 
+
+    # rolls dice to whether continue generating code on the current indentation
+    # level, or go back 1 (or 2) tabs, if the code allows
     def roll_indent(self):
         # random roll for a chance to indent 1 level back
         if self.tab > 0 and self.followup == False:
@@ -69,45 +79,26 @@ class Coder:
                 if len(self.buffered_actions) > 0:
                     self.buffered_actions.pop()()
                     self.followup = True
-                    # deindent = self.buffered_actions.pop()
-                    # print(deindent)
             elif roll < 85:
-
-                #BUG THIS GOT BROKEN
+                # if there are no actions in the buffer, allow for a "-2 tabs" option
                 if len(self.buffered_actions) == 0:
                     self.tab = self.tab - 2
-                    # self.buffered_actions.pop()()
-                    # self.followup = True
-                    # deindent = self.buffered_actions.pop()
-                    # print(deindent)
             self.tab = 0 if self.tab < 0 else self.tab 
-        # 25% chance to go back one level
-        # # 10% chance to go back two levels
 
+
+    # Function that prints an empty line randomly (15% chance)
     def roll_space(self):
         roll = random.randint(0, 99)
         if roll < 15:
             print()
 
-    def generate_statement(self):
-        return Generators.get_statement()
-
-    def generate_value(self):
-        return Generators.generate_value()
-
-    # def generate_iterable(self):
-    #     iterable = 'range(' + str(random.randint(0, 50)) + ', ' + str(random.randint(50, 250)) + ')'
-    #     return '(ITERABLE)'
-    
-    def generate_function_name(self):
-        return Generators.generate_function_name()
 
     def if_statement(self):
         if_list = [(Fore.LIGHTMAGENTA_EX, 'if '), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ':')]
-        # self.humanoid_print('if ' + self.generate_statement() + ':')
         self.humanoid_print(self.remove_nested(if_list))
         self.tab = self.tab + 1
         self.followup = True
+
 
     def else_statement(self):
         else_list = [(Fore.LIGHTMAGENTA_EX, 'else'), (Fore.LIGHTWHITE_EX, ':')]
@@ -116,15 +107,18 @@ class Coder:
         self.tab = self.tab + 1
         self.followup = True
 
+
     def if_else_statement(self):
         self.tabs.append(self.tab)
         self.if_statement()
         # self.humanoid_print('if else')
 
+
     def if_inline_statement(self):
         if_inline_list = [(Fore.LIGHTWHITE_EX, Generators.generate_variable_name() + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTMAGENTA_EX, ' if '), (Fore.LIGHTWHITE_EX, '('), Generators.get_statement(), (Fore.LIGHTWHITE_EX, ')'), (Fore.LIGHTMAGENTA_EX, ' else '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())]), (Fore.LIGHTWHITE_EX, ' ')]
         self.humanoid_print(self.remove_nested(if_inline_list))
         self.followup = False
+
 
     def try_statement(self):
         self.tabs.append(self.tab)
@@ -133,6 +127,7 @@ class Coder:
         self.humanoid_print(self.remove_nested(try_list))
         self.tab = self.tab + 1
         self.followup = True
+
 
     def except_statement(self):
         if random.randint(0, 1) is 0:
@@ -145,11 +140,13 @@ class Coder:
         self.tab = self.tab + 1
         self.followup = True
 
+
     def create_loop(self):
         loop = Generators.generate_loop()
         self.humanoid_print(self.remove_nested(loop))
         self.tab = self.tab + 1
         self.followup = True
+
 
     def create_function(self):
         function_list = [(Fore.BLUE, 'def '), Generators.generate_function_name(), (Fore.LIGHTWHITE_EX, ':')]
@@ -157,45 +154,43 @@ class Coder:
         self.tab = self.tab + 1
         self.followup = True
 
+
     def assign_var_value(self):
         random_var = Generators.generate_variable_name()
         assign_var_list = [(Fore.LIGHTWHITE_EX, random_var + ' = '), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), (Fore.LIGHTYELLOW_EX, Generators.generate_string())])]
         self.humanoid_print(self.remove_nested(assign_var_list))
         self.followup = False
     
+
     def print_statement(self):
         print_list = [(Fore.CYAN, 'print'), (Fore.LIGHTWHITE_EX, '('), random.choice([(Fore.LIGHTBLACK_EX, Generators.generate_number()), Generators.generate_function_name(), (Fore.LIGHTWHITE_EX, Generators.generate_variable_name())]), (Fore.LIGHTWHITE_EX, ')'),]
         self.humanoid_print(self.remove_nested(print_list))
         self.followup = False
     
+
     def execute_function_statement(self):
         self.humanoid_print(self.remove_nested([Generators.generate_function_name()]))
         self.followup = False
+
 
     def comment_statement(self):
         comment = Generators.generate_comment()
         self.humanoid_print(self.remove_nested([(Fore.GREEN, comment)]))
 
-    # def pass_statement(self):
-    #     self.humanoid_print('pass')
 
+    # def misc_statement(self):
+    # pass, break, continue, etc
+
+
+    # a composite block that randomly executes 3 actions from a simple action list
     def code_block(self, size=None):
         if size is None:
             size = 3
         
         for _ in range(size):
-            # self.humanoid_print('a line of a code_block')
             random.choice(self.action_choices_simple)(self)
-        
         print()
 
-    # def code_block_bigger(self):
-    #     self.code_block(5)
-    #     pass
-
-    # def code_block_biggest(self):
-    #     self.code_block(7)
-    #     pass
 
     # a set of all possible actions
     action_choices = [if_else_statement, try_statement, create_loop, create_function,
@@ -204,6 +199,7 @@ class Coder:
     # a set of actions that do not require indentation
     action_choices_simple = [assign_var_value, print_statement, execute_function_statement,
         comment_statement, code_block]
+    # chooses randomly an action to perform from the list above and executes it.
     def choose_action(self):
         
         # choose the next action
@@ -213,11 +209,10 @@ class Coder:
         self.next_action(self)
         
 
-
         # these following two actions are composite, and require a second part with
-        # indentation back and forth
-        # NOTE: compared to the part of the action_choices and not the
-        # functions themselves because the memory slots are different
+        # indentation that has to be properly aligned
+        # NOTE: the if statement compares to the part of the action_choices and not the
+        # functions themselves because their position in memory is different
         
         # at least one statement is required so that it wont indent back on empty line
 
@@ -232,24 +227,18 @@ class Coder:
             self.next_action = random.choice(self.action_choices_simple)
             self.next_action(self)
 
-    def action_cleanup(self):
-        self.next_action = None
 
-    # the main action loop, recursive
+    # The main action block of the simulation.
+    # Rolls a random action.
+    # Rolls a random indentation check.
+    # Rolls a random extra new line.
     def do_next_action(self):
         self.choose_action()
         self.roll_indent()
         self.roll_space()
-        self.action_cleanup()
 
-        self.do_next_action()
 
+    # Call this to start the simulation.
     def start(self):
-        self.do_next_action()
-
-    # a test method. Executes an action block once
-    def test(self):
-        self.choose_action()
-        self.roll_indent()
-        self.roll_space()
-        self.action_cleanup()
+        while True:
+            self.do_next_action()

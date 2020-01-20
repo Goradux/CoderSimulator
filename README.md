@@ -1,11 +1,11 @@
 # Coder Simulator
 
 ### TL;DR:
-A small program that simulates code writing process by spewing out lines of code in a semi-structured manner.
+A small program that simulates code writing process by generating and spewing out random lines of code in a semi-structured manner.
 
 ---
 
-This program simulates coder's work by writing code indefinitely at a certain (can be specified) speed. The program follows some general set of Python rules, such as matching indentations for try/catch blocks, or not unindenting after an empty function definition statement, etc.
+This program simulates coder's work by writing code indefinitely at a certain speed (can be specified as an argument). The program follows some general set of Python rules, such as matching indentations for try/catch blocks, or not unindenting after an empty function definition statement, etc. The code is generated randomly, which includes randomly generated variable names, function names, statements, if/else blocks, try/catch blocks, function definition blocks, as well as some in-built functions.
 
 The program supports two output modes: colored and monochromatic. Colored mode highlights syntax of the program, as some IDEs would. Monochromatic mode would just stick to the default colors of the terminal window, which is used for running the program.
 
